@@ -119,8 +119,11 @@ class NextcloudSetting(Document):
 			return None
 		if not vurl.port:
 			port = 443 if vurl.scheme == 'https' else 80
+		else:
+			port_url = vurl.netloc
+			nc_url = port_url.replace(":" + str(vurl.port),"")
 
-		base_url = '{0}://{1}:{2}'.format(vurl.scheme, vurl.netloc, vurl.port if vurl.port else port)
+		base_url = '{0}://{1}:{2}'.format(vurl.scheme, vurl.netloc if not vurl.port else nc_url, vurl.port if vurl.port else port)
 		if self.webdav_url.startswith('/'):
 			base_url = '{0}{1}'.format(base_url, self.webdav_url)
 		else:
